@@ -12,14 +12,14 @@ import {MatCardModule} from '@angular/material/card';
     MatTableModule,
     MatIconModule,
     MatButtonModule,
-    MatCardModule
+    MatCardModule,
   ],
   exports: [
     CommonModule,
     MatTableModule,
     MatIconModule,
     MatButtonModule,
-    MatCardModule
+    MatCardModule,
   ]
 })
 export class MaterialModule { }

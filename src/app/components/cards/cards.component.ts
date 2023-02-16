@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Curso } from 'src/app/models/curso';
 import { CursoService } from 'src/app/services/curso.service';
+import { FormControl, FormGroup } from "@angular/forms";
 
 @Component({
   selector: 'app-cards',
@@ -10,13 +11,23 @@ import { CursoService } from 'src/app/services/curso.service';
 })
 export class CardsComponent implements OnInit{
   cursos$!: Observable<Curso[]>;
+  formFilter!: FormGroup;
+  controles: any = {
+    nombre: new FormControl("")
+  }
 
   constructor(
     private cursoService: CursoService
-  ){}
+  ){
+    
+  }
   
   ngOnInit() {
-    console.log("Paso 1");
-    this.cursos$ = this.cursoService.obtenerObservable();
+    this.formFilter = new FormGroup(this.controles)
+    this.cursos$ = this.cursoService.obtenerCursoFiltro(this.controles.nombre.value);
+  }
+
+  filtrar() {
+    this.cursos$ = this.cursoService.obtenerCursoFiltro(this.controles.nombre.value);
   }
 }

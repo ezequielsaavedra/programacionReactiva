@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { filter, map, of } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Observable } from 'rxjs/internal/Observable';
 import { Curso } from '../models/curso';
@@ -9,7 +10,7 @@ import { Curso } from '../models/curso';
 export class CursoService {
   private cursos: Curso[] = [
     {
-      nombre: "Ingles",
+      nombre: "ingles",
       profesor: {
         nombre: "Marisa",
         apellido: "Gasparri",
@@ -21,7 +22,7 @@ export class CursoService {
       fechaFin: new Date(2023, 10, 22)
     },
     {
-      nombre: "Japones",
+      nombre: "japones",
       profesor: {
         nombre: "Nezuko",
         apellido: "Kamado",
@@ -33,7 +34,7 @@ export class CursoService {
       fechaFin: new Date(2023, 10, 23)
     },
     {
-      nombre: "Aleman",
+      nombre: "aleman",
       profesor: {
         nombre: "Erwin",
         apellido: "Smith",
@@ -45,7 +46,7 @@ export class CursoService {
       fechaFin: new Date(2023, 10, 22)
     },
     {
-      nombre: "Italiano",
+      nombre: "italiano",
       profesor: {
         nombre: "Laureano",
         apellido: "Colombini",
@@ -58,8 +59,9 @@ export class CursoService {
     },
   ];
   private cursos$!: BehaviorSubject<Curso[]>;
-  
-  constructor() { 
+  private cursosFilter$!: BehaviorSubject<Curso[]>;
+
+  constructor() {
     this.obtenerCurso()
   }
 
@@ -74,8 +76,20 @@ export class CursoService {
     })
   }
 
-  obtenerObservable(): Observable<Curso[]>{
+  obtenerObservable(): Observable<Curso[]> {
     return this.cursos$.asObservable();
   }
 
+
+  obtenerCursoFiltro(form: string): any {
+    of(this.cursos).pipe(
+      map((cursos: Curso[]) => {
+        return cursos.filter((curso: Curso) => curso.nombre.includes( form.toLocaleLowerCase()))
+      })
+    ).subscribe((cursos) => {
+      console.log(cursos)
+      return (this.cursosFilter$ = new BehaviorSubject(cursos));
+    })
+    return this.cursosFilter$.asObservable();
+  }
 }
